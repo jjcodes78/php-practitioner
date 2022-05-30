@@ -21,8 +21,9 @@ class Router
     //
     public static function resolve(string $uri, string $method = 'GET')
     {
-        $cleanUri = (isset($_SERVER['QUERY_STRING'])) ?
-            str_replace("?" . $_SERVER['QUERY_STRING'], "", $uri) :
+        $queryString = Request::queryString();
+        $cleanUri = ($queryString) ?
+            str_replace("?" . $queryString, "", $uri) :
             $uri;
 
         $routes = self::$routes;

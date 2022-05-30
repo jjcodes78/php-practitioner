@@ -1,9 +1,14 @@
 {
     "name": "jorge/lesson-3",
-    "require": {},
+    "require": {
+      "ext-pdo": "*"
+    },
     "autoload": {
         "classmap": [
             "./"
+        ],
+        "files": [
+            "helpers.php"
         ]
     }
 }
