@@ -20,4 +20,9 @@ class Request
     {
         return $_SERVER['QUERY_STRING'] ?? null;
     }
+
+    public static function getPostValue(string $key)
+    {
+        return $_POST[$key];
+    }
 }
