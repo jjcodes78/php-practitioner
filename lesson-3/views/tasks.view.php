@@ -1,6 +1,6 @@
 <h1>About Page</h1>
 
-<form action="/about" method="POST">
+<form action="/tasks" method="POST">
     <input type="text" name="task">
     <button type="submit">Salvar</button>
 </form>
