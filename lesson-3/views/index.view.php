@@ -10,12 +10,24 @@
 <section class="todoapp">
     <header class="header">
         <h1>todos</h1>
-        <input class="new-todo" placeholder="What needs to be done?" autofocus>
+        <form action="/tasks" method="POST">
+            <input name="task" class="new-todo" placeholder="What needs to be done?" autofocus />
+        </form>
     </header>
     <section class="main">
         <input id="toggle-all" class="toggle-all" type="checkbox">
         <label for="toggle-all">Mark all as complete</label>
-        <ul class="todo-list"></ul>
+        <ul class="todo-list">
+            <?php foreach ($tasks as $task): ?>
+            <li>
+                <div class="view">
+                    <input class="toggle" type="checkbox">
+                    <label><?= $task->task ?></label>
+                    <button class="destroy"></button>
+                </div>
+            </li>
+            <?php endforeach; ?>
+        </ul>
     </section>
     <footer class="footer">
         <span class="todo-count"></span>

@@ -6,12 +6,12 @@ class TasksController
     {
         $pdo = DbConnector::make();
 
-        $sql = "SELECT * FROM tasks;";
+        $sql = "SELECT * FROM tasks ORDER BY id DESC ;";
         $statement = $pdo->query($sql);
 
         $tasks = $statement->fetchAll(PDO::FETCH_CLASS);
 
-        return view('tasks', [
+        return view('index', [
             'tasks' => $tasks
         ]);
     }
@@ -26,6 +26,6 @@ class TasksController
         $statement = $pdo->prepare($sql);
         $statement->execute([$_POST['task']]);
 
-        Redirect::to('/tasks');
+        Redirect::to('/');
     }
 }
