@@ -23,7 +23,11 @@
                 <div class="view">
                     <input class="toggle" type="checkbox">
                     <label><?= $task->task ?></label>
-                    <button class="destroy"></button>
+                    <form action="/" method="POST">
+                        <input type="hidden" name="id" value="<?= $task->id ?>">
+                        <input type="hidden" name="_method" value="DELETE">
+                        <button type="submit" class="destroy"></button>
+                    </form>
                 </div>
             </li>
             <?php endforeach; ?>

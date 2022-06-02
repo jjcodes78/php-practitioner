@@ -26,4 +26,18 @@ abstract class Model
         $statement = $pdo->prepare($sql);
         $statement->execute($values);
     }
+
+    public static function delete(array $attributes)
+    {
+        $whereValue = "";
+        foreach ($attributes as $key => $value) {
+            $whereValue .= "$key=$value and ";
+        }
+        $whereValue = rtrim($whereValue, "and ");
+
+        $instance = new static;
+        $pdo = DbConnector::make();
+        $sql = "DELETE FROM {$instance->tableName} WHERE {$whereValue}";
+        $pdo->exec($sql);
+    }
 }

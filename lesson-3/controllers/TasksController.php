@@ -19,4 +19,12 @@ class TasksController
 
         Redirect::to('/');
     }
+
+    public function destroy()
+    {
+        $id = Request::getPostValue('id');
+        Task::delete(["id" => $id]);
+
+        Redirect::to("/");
+    }
 }
