@@ -21,8 +21,19 @@
             <?php foreach ($tasks as $task): ?>
             <li>
                 <div class="view">
-                    <input class="toggle" type="checkbox">
-                    <label><?= $task->task ?></label>
+                    <input class="toggle"
+                           type="checkbox"
+                           <?php if($task->completed) echo "checked" ?>
+                           onclick="taskMark(this)"
+                           data-form="form-<?= $task->id ?>"
+                    />
+                    <label>
+                        <?php if(!$task->completed) :?>
+                            <?= $task->task ?>
+                        <?php else :?>
+                            <s><?= $task->task ?></s>
+                        <?php endif; ?>
+                    </label>
                     <form action="/" method="POST">
                         <input type="hidden" name="id" value="<?= $task->id ?>">
                         <input type="hidden" name="_method" value="DELETE">
@@ -30,6 +41,13 @@
                     </form>
                 </div>
             </li>
+            <!-- FORM dedicado a atualizar o valor de completed da tarefa
+                 usando a função taskMark no javascript -->
+            <form action="/" method="POST" id="form-<?= $task->id ?>">
+                <input type="hidden" name="id" value="<?= $task->id ?>">
+                <input type="hidden" name="completed" value="<?= $task->completed ?>">
+                <input type="hidden" name="_method" value="PUT">
+            </form>
             <?php endforeach; ?>
         </ul>
     </section>
@@ -55,5 +73,11 @@
     <p>Refactored by <a href="https://github.com/cburgmer">Christoph Burgmer</a></p>
     <p>Part of <a href="http://todomvc.com">TodoMVC</a></p>
 </footer>
+<script>
+    function taskMark(el) {
+        let form = document.getElementById(el.getAttribute('data-form'))
+        form.submit()
+    }
+</script>
 </body>
 </html>

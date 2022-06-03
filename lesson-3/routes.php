@@ -7,3 +7,5 @@ Router::post('/tasks', 'TasksController@store');
 Router::get('/users', 'UsersController@index');
 
 Router::delete('/', 'TasksController@destroy');
+
+Router::put('/', 'TasksController@update');

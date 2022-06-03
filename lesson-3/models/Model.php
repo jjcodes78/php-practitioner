@@ -27,10 +27,42 @@ abstract class Model
         $statement->execute($values);
     }
 
-    public static function delete(array $attributes)
+    public static function update(array $conditions, array $attributes)
+    {
+        $instance = new static;
+        $pdo = DbConnector::make();
+
+        // Monta SET key = :key[, ]...
+        $setValues = "";
+        foreach ($attributes as $key => $value) {
+            $setValues .= "{$key} = :{$key}, ";
+        }
+        $setValues = rtrim($setValues, ", ");
+
+        // Monta as condições para o WHERE key=value [and ]...
+        $whereValues = "";
+        foreach ($conditions as $key => $value) {
+            $whereValues .= "$key=$value and ";
+        }
+        $whereValues = rtrim($whereValues, "and ");
+
+        // Combina tudo para montar a instrução SQL
+        $sql = "UPDATE {$instance->tableName} SET {$setValues} WHERE {$whereValues}";
+        $statement = $pdo->prepare($sql);
+
+        // Percorre o array de atributes a faz o bind descrito no SET para os valores
+        // a serem atualizados SET key = :key => key = value
+        foreach ($attributes as $key => $value) {
+            $statement->bindValue(":{$key}", $value);
+        }
+
+        $statement->execute();
+    }
+
+    public static function delete(array $conditions)
     {
         $whereValue = "";
-        foreach ($attributes as $key => $value) {
+        foreach ($conditions as $key => $value) {
             $whereValue .= "$key=$value and ";
         }
         $whereValue = rtrim($whereValue, "and ");
