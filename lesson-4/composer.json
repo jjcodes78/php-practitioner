@@ -1,0 +1,14 @@
+{
+    "name": "jorge/lesson-3",
+    "require": {
+      "ext-pdo": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "./"
+        },
+        "files": [
+            "helpers.php"
+        ]
+    }
+}
