@@ -1,5 +1,10 @@
 <?php
 
+namespace App\Models;
+
+use App\Database\DbConnector;
+use PDO;
+
 abstract class Model
 {
     protected $tableName;
@@ -9,6 +14,16 @@ abstract class Model
         $instance = new static;
         $pdo = DbConnector::make();
         $sql = "SELECT * FROM {$instance->tableName} ORDER BY id DESC;";
+        $statement = $pdo->query($sql);
+        return $statement->fetchAll(PDO::FETCH_CLASS);
+    }
+
+    public static function where(array $conditions)
+    {
+        $instance = new static;
+        $pdo = DbConnector::make();
+        $whereValues = self::getWhereValues($conditions);
+        $sql = "SELECT * FROM {$instance->tableName} WHERE {$whereValues} ORDER BY id DESC;";
         $statement = $pdo->query($sql);
         return $statement->fetchAll(PDO::FETCH_CLASS);
     }
@@ -40,11 +55,7 @@ abstract class Model
         $setValues = rtrim($setValues, ", ");
 
         // Monta as condições para o WHERE key=value [and ]...
-        $whereValues = "";
-        foreach ($conditions as $key => $value) {
-            $whereValues .= "$key=$value and ";
-        }
-        $whereValues = rtrim($whereValues, "and ");
+        $whereValues = self::getWhereValues($conditions);
 
         // Combina tudo para montar a instrução SQL
         $sql = "UPDATE {$instance->tableName} SET {$setValues} WHERE {$whereValues}";
@@ -71,5 +82,14 @@ abstract class Model
         $pdo = DbConnector::make();
         $sql = "DELETE FROM {$instance->tableName} WHERE {$whereValue}";
         $pdo->exec($sql);
+    }
+
+    protected static function getWhereValues(array $conditions): string
+    {
+        $whereValues = "";
+        foreach ($conditions as $key => $value) {
+            $whereValues .= "$key=$value and ";
+        }
+        return rtrim($whereValues, "and ");
     }
 }

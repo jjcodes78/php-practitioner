@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Core;
+
 class Application
 {
     public static function start()

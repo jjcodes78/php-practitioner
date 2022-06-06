@@ -55,16 +55,28 @@
         <span class="todo-count"></span>
         <ul class="filters">
             <li>
-                <a href="#/" class="selected">All</a>
+                <a href="/"
+                    <?php if(! in_array(App\Core\Http\Request::queryString('filter'), ['active', 'completed'])) echo 'class="selected"'?>>
+                    All
+                </a>
             </li>
             <li>
-                <a href="#/active">Active</a>
+                <a href="/?filter=active"
+                    <?php if(App\Core\Http\Request::queryString('filter') == 'active') echo 'class="selected"'?>>
+                    Active
+                </a>
             </li>
             <li>
-                <a href="#/completed">Completed</a>
+                <a href="/?filter=completed"
+                    <?php if(App\Core\Http\Request::queryString('filter') == 'completed') echo 'class="selected"'?>>
+                    Completed
+                </a>
             </li>
         </ul>
-        <button class="clear-completed">Clear completed</button>
+        <form action="/completed" method="POST">
+            <input type="hidden" name="_method" value="DELETE">
+            <button type="submit" class="clear-completed">Clear completed</button>
+        </form>
     </footer>
 </section>
 <footer class="info">

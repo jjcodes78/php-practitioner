@@ -1,4 +1,7 @@
 <?php
+namespace App\Database\Migrations;
+
+use App\Database\Schema;
 
 class CreateUsersTable implements Schema
 {

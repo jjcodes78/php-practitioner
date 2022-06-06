@@ -1,11 +1,15 @@
 <?php
 
-Router::get('/', 'TasksController@index');
+Use App\Core\Router;
 
-Router::post('/tasks', 'TasksController@store');
+Router::get('/', 'App\Controllers\TasksController@index');
 
-Router::get('/users', 'UsersController@index');
+Router::post('/tasks', 'App\Controllers\TasksController@store');
 
-Router::delete('/', 'TasksController@destroy');
+Router::get('/users', 'App\Controllers\TasksController@index');
 
-Router::put('/', 'TasksController@update');
+Router::delete('/', 'App\Controllers\TasksController@destroy');
+
+Router::delete('/completed', 'App\Controllers\TasksController@destroyCompleted');
+
+Router::put('/', 'App\Controllers\TasksController@update');

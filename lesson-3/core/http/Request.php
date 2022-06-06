@@ -1,4 +1,5 @@
 <?php
+namespace App\Core\Http;
 
 class Request
 {
@@ -16,8 +17,20 @@ class Request
         return $_SERVER['REQUEST_METHOD'] ?? null;
     }
 
-    public static function queryString()
+    public static function queryString($key = null)
     {
+        if (! is_null($key)) {
+            if (! isset($_SERVER['QUERY_STRING'])) return null;
+
+            $queries = explode("&", $_SERVER['QUERY_STRING']);
+            foreach ($queries as $query) {
+                $resultQuery = explode("=", $query);
+                if($resultQuery[0] == $key) {
+                    return $resultQuery[1];
+                }
+            }
+            return null;
+        }
         return $_SERVER['QUERY_STRING'] ?? null;
     }
 

@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Core\Http;
+
 class Redirect
 {
     public static function to($route, $status = 302)

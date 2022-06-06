@@ -1,4 +1,7 @@
 <?php
+namespace App\Database\Seeders;
+
+use PDO;
 
 class TasksTableSeeder
 {

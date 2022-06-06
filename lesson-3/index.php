@@ -2,4 +2,4 @@
 
 require 'vendor/autoload.php';
 
-Application::start();
+App\Core\Application::start();

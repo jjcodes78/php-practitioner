@@ -1,10 +1,26 @@
 <?php
 
+namespace App\Controllers;
+
+use App\Core\Http\Request;
+use App\Core\Http\Redirect;
+use App\Models\Task;
+
 class TasksController
 {
     public function index()
     {
-        $tasks = Task::all();
+
+        switch (Request::queryString('filter')) {
+            case 'active':
+                $tasks = Task::where(['completed' => "0"]);
+                break;
+            case 'completed':
+                $tasks = Task::where(['completed' => "1"]);
+                break;
+            default:
+                $tasks = Task::all();
+        }
 
         return view('index', [
             'tasks' => $tasks
@@ -35,6 +51,13 @@ class TasksController
     {
         $id = Request::getPostValue('id');
         Task::delete(["id" => $id]);
+
+        Redirect::to("/");
+    }
+
+    public function destroyCompleted()
+    {
+        Task::delete(["completed" => true]);
 
         Redirect::to("/");
     }

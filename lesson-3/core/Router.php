@@ -1,5 +1,10 @@
 <?php
 
+namespace App\Core;
+
+use App\Core\Http\Request;
+use Closure;
+
 class Router
 {
     // coleção (array) de rotas
