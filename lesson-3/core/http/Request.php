@@ -19,6 +19,9 @@ class Request
 
     public static function queryString($key = null)
     {
+        // Se $key não for nulo, e se há alguma query string na requisição.
+        // Obtem todas as queries extraindo com & e em seguida percorre as queries
+        // para extrair cada chave e valor de cada query (key=value). Retornando o valor da chave.
         if (! is_null($key)) {
             if (! isset($_SERVER['QUERY_STRING'])) return null;
 

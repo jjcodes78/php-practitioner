@@ -1,5 +1,8 @@
 <?php
 
+// Faz o "import" das classes usadas
+// durante o registro das rotas.
+// A classe Router é a responsável por registrar uma rota.
 use App\Controllers\TasksController;
 Use App\Core\Router;
 
