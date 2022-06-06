@@ -1,8 +1,9 @@
 <?php
 
+use App\Controllers\TasksController;
 Use App\Core\Router;
 
-Router::get('/', 'App\Controllers\TasksController@index');
+Router::get('/', [TasksController::class, 'index']);
 
 Router::post('/tasks', 'App\Controllers\TasksController@store');
 

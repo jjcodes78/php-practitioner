@@ -53,6 +53,13 @@ class Router
             return self::getRouteKey()();
         }
 
+        //verificar se o segundo argumento da rota é um array
+        if(is_array(self::getRouteKey())) {
+            $controller = self::getRouteKey()[0];
+            $controllerMethod = self::getRouteKey()[1];
+            return (new $controller)->{$controllerMethod}();
+        }
+
         // verificar se a rota aponta para um controller
         if(str_contains(self::getRouteKey(), '@')) {
             $action = explode('@', trim(self::getRouteKey()));
