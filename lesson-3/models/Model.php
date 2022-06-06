@@ -7,62 +7,50 @@ use PDO;
 
 abstract class Model
 {
-    protected $tableName;
+    protected string $tableName;
 
-    public static function all()
+    protected PDO $connection;
+
+    public function __construct()
     {
-        $instance = new static;
-        $pdo = DbConnector::make();
-        $sql = "SELECT * FROM {$instance->tableName} ORDER BY id DESC;";
-        $statement = $pdo->query($sql);
+        $this->connection = DbConnector::make();
+    }
+
+    public function all(): array|false
+    {
+        $sql = "SELECT * FROM {$this->tableName} ORDER BY id DESC;";
+        $statement = $this->connection->query($sql);
         return $statement->fetchAll(PDO::FETCH_CLASS);
     }
 
-    public static function where(array $conditions)
+    public function where(array $conditions): array|false
     {
-        $instance = new static;
-        $pdo = DbConnector::make();
-        $whereValues = self::getWhereValues($conditions);
-        $sql = "SELECT * FROM {$instance->tableName} WHERE {$whereValues} ORDER BY id DESC;";
-        $statement = $pdo->query($sql);
+        $whereValues = $this->getWhereValues($conditions);
+        $sql = "SELECT * FROM {$this->tableName} WHERE {$whereValues} ORDER BY id DESC;";
+        $statement = $this->connection->query($sql);
         return $statement->fetchAll(PDO::FETCH_CLASS);
     }
 
-    public static function save(array $attributes)
+    public function save(array $attributes): void
     {
         $keys = trim(implode(',', array_keys($attributes)), ',');
         $marks = trim(str_repeat("?,", count($attributes)), ',');
         $values = array_values($attributes);
 
-        $instance = new static;
-        $pdo = DbConnector::make();
-        $sql = "INSERT INTO {$instance->tableName} ({$keys}) VALUES ({$marks})";
+        $sql = "INSERT INTO {$this->tableName} ({$keys}) VALUES ({$marks})";
 
-        $statement = $pdo->prepare($sql);
+        $statement = $this->connection->prepare($sql);
         $statement->execute($values);
     }
 
-    public static function update(array $conditions, array $attributes)
+    public function update(array $conditions, array $attributes): void
     {
-        $instance = new static;
-        $pdo = DbConnector::make();
+        $setValues = $this->getSetValues($attributes);
+        $whereValues = $this->getWhereValues($conditions);
 
-        // Monta SET key = :key[, ]...
-        $setValues = "";
-        foreach ($attributes as $key => $value) {
-            $setValues .= "{$key} = :{$key}, ";
-        }
-        $setValues = rtrim($setValues, ", ");
+        $sql = "UPDATE {$this->tableName} SET {$setValues} WHERE {$whereValues}";
+        $statement = $this->connection->prepare($sql);
 
-        // Monta as condições para o WHERE key=value [and ]...
-        $whereValues = self::getWhereValues($conditions);
-
-        // Combina tudo para montar a instrução SQL
-        $sql = "UPDATE {$instance->tableName} SET {$setValues} WHERE {$whereValues}";
-        $statement = $pdo->prepare($sql);
-
-        // Percorre o array de atributes a faz o bind descrito no SET para os valores
-        // a serem atualizados SET key = :key => key = value
         foreach ($attributes as $key => $value) {
             $statement->bindValue(":{$key}", $value);
         }
@@ -70,26 +58,33 @@ abstract class Model
         $statement->execute();
     }
 
-    public static function delete(array $conditions)
+    public function delete(array $conditions): void
     {
-        $whereValue = "";
-        foreach ($conditions as $key => $value) {
-            $whereValue .= "$key=$value and ";
-        }
-        $whereValue = rtrim($whereValue, "and ");
-
-        $instance = new static;
-        $pdo = DbConnector::make();
-        $sql = "DELETE FROM {$instance->tableName} WHERE {$whereValue}";
-        $pdo->exec($sql);
+        $whereValue = $this->getWhereValues($conditions);
+        $sql = "DELETE FROM {$this->tableName} WHERE {$whereValue}";
+        $this->connection->exec($sql);
     }
 
-    protected static function getWhereValues(array $conditions): string
+    protected function getWhereValues(array $conditions): string
     {
         $whereValues = "";
         foreach ($conditions as $key => $value) {
             $whereValues .= "$key=$value and ";
         }
         return rtrim($whereValues, "and ");
+    }
+
+    protected function getSetValues(array $attributes): string
+    {
+        $setValues = "";
+        foreach ($attributes as $key => $value) {
+            $setValues .= "{$key} = :{$key}, ";
+        }
+        return rtrim($setValues, ", ");
+    }
+
+    public static function on(): static
+    {
+        return new static;
     }
 }

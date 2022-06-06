@@ -13,13 +13,13 @@ class TasksController
 
         switch (Request::queryString('filter')) {
             case 'active':
-                $tasks = Task::where(['completed' => "0"]);
+                $tasks = Task::on()->where(['completed' => "0"]);
                 break;
             case 'completed':
-                $tasks = Task::where(['completed' => "1"]);
+                $tasks = Task::on()->where(['completed' => "1"]);
                 break;
             default:
-                $tasks = Task::all();
+                $tasks = Task::on()->all();
         }
 
         return view('index', [
@@ -29,7 +29,7 @@ class TasksController
 
     public function store()
     {
-        Task::save([
+        Task::on()->save([
             'task' => Request::getPostValue('task')
         ]);
 
@@ -38,7 +38,7 @@ class TasksController
 
     public function update()
     {
-        Task::update([
+        Task::on()->update([
             'id' => Request::getPostValue('id')
         ], [
             'completed' => intval(! Request::getPostValue('completed'))
@@ -50,14 +50,14 @@ class TasksController
     public function destroy()
     {
         $id = Request::getPostValue('id');
-        Task::delete(["id" => $id]);
+        Task::on()->delete(["id" => $id]);
 
         Redirect::to("/");
     }
 
     public function destroyCompleted()
     {
-        Task::delete(["completed" => true]);
+        Task::on()->delete(["completed" => true]);
 
         Redirect::to("/");
     }
