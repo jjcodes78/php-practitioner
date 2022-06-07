@@ -6,6 +6,8 @@ use App\Core\Http\Request;
 use App\Core\Router;
 use App\Database\Connector;
 
+use App\Facades\Router as RouterFacade;
+
 require 'vendor/autoload.php';
 
 // Criamos uma instância estática da aplicação com o método make.
@@ -15,7 +17,7 @@ $app = Application::make();
 
 $app->registerFacades([
     'redirect' => Redirect::class,
-    'request' => Request::class
+    'request' => Request::class,
 ]);
 
 // Registra uma instância singleton (única)
@@ -24,4 +26,4 @@ $app->registerFacades([
 $app->singleton('router', Router::class);
 $app->singleton('db', Connector::class);
 
-$app->start();
+RouterFacade::resolve();

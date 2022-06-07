@@ -2,7 +2,6 @@
 
 namespace App\Core;
 
-use App\Facades\Router;
 use Exception;
 
 class Application
@@ -22,14 +21,6 @@ class Application
     public static function getInstance(): Application
     {
         return self::$instance;
-    }
-
-    public function start(): void
-    {
-        // Ao saber quais rotas estão registradas pela aplicação.
-        // Chamamos o método resolve do Router para que
-        // resolva a requisição e devolva (ou não) uma resposta.
-        Router::resolve();
     }
 
     public function registerFacades(array $facades): void

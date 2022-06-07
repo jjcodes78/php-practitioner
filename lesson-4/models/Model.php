@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Database\Connector;
 use App\Facades\DB;
 use PDO;
 
