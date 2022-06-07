@@ -8,7 +8,7 @@ class UsersController
 {
     public function index()
     {
-        $users = User::all();
+        $users = User::on()->all();
         return view('users-index', [
             'users' => $users
         ]);

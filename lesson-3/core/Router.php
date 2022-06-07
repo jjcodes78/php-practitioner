@@ -71,8 +71,9 @@ class Router
         // Se sim, quebra-se a string extraindo o indíce 0 como controller e 1 como método.
         // Cria-se uma instância do controller executando o método encontrado e retonando como resposta.
         if(str_contains(self::getRouteKey(), '@')) {
+            $controllerNamespace = "App\\Controlllers";
             $action = explode('@', trim(self::getRouteKey()));
-            $controller = $action[0];
+            $controller = "{$controllerNamespace}\\{$action[0]}";
             $controllerMethod = $action[1];
             return (new $controller)->{$controllerMethod}();
         }
